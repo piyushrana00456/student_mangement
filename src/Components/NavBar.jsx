@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Nav = styled.nav`
   border: 1px solid black;
@@ -35,10 +36,25 @@ export const NavBar = () => {
     <>
       <Nav>
         <div>
-          <p>Home</p>
+          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+            <p>Home</p>
+          </Link>
         </div>
         <div>
-          <p>Admin Login</p>
+          <Link
+            to="admin-login"
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            <p>Admin Login</p>
+          </Link>
+        </div>
+        <div>
+          <Link
+            to="admin-signUp"
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            <p>Admin SignUp</p>
+          </Link>
         </div>
       </Nav>
     </>
