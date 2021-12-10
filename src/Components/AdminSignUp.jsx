@@ -1,6 +1,13 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  registerError,
+  registerLoading,
+  registerSuccess,
+} from "../Redux/action";
 
 const From = styled.form`
   width: 50%;
@@ -49,6 +56,7 @@ const initState = {
   password: "",
 };
 export const AdminSignUp = () => {
+  const dispatch = useDispatch();
   const [signup, setSignup] = useState(initState);
 
   const handleChange = (e) => {
@@ -62,6 +70,35 @@ export const AdminSignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(signup);
+    handleRegister(signup);
+  };
+
+  const handleRegister = async (e) => {
+    console.log("data:", e);
+    // if (e.email.includes("@masai.school")) {
+    //   return true;
+    // } else {
+    //   alert(" you're not supposed to come here");
+    // }
+    try {
+      dispatch(registerLoading());
+      await axios
+        .post("http://localhost:4000/admin-signup", {
+          first_name: e.first_name,
+          last_name: e.last_name,
+          email: e.email,
+          password: e.password,
+        })
+        .then((res) => {
+          const action = registerSuccess(res.data);
+          dispatch(action);
+          localStorage.setItem("admin", JSON.stringify(res.data));
+        });
+    } catch (error) {
+      const action = registerError("Wrong Credentials");
+      dispatch(action);
+      console.log(error);
+    }
   };
 
   return (

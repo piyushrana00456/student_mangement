@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { TextField } from "@mui/material";
 import styled from "styled-components";
-
+import { loginLoading, loginSuccess, loginError } from "../Redux/action";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 const Div = styled.div`
   width: 40%;
   margin: auto;
@@ -44,7 +47,10 @@ const initState = {
 
 export const AdminLogin = () => {
   const [login, setLogin] = useState(initState);
-
+  const dispatch = useDispatch();
+  const { auth } = useSelector((state) => state.auth);
+  const history = useNavigate();
+  console.log(auth);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLogin({
@@ -54,8 +60,30 @@ export const AdminLogin = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
     console.log(login);
+    e.preventDefault();
+    handleLogin(login);
+  };
+
+  const handleLogin = async (e) => {
+    console.log(e);
+    try {
+      dispatch(loginLoading());
+      await axios
+        .get("http://localhost:4000/admin-login", {
+          email: e.email,
+          password: e.password,
+        })
+        .then((res) => {
+          const action = loginSuccess(res.data);
+          dispatch(action);
+          localStorage.setItem("admin", JSON.stringify(res.data));
+          history("/admin-dashboard");
+        });
+    } catch (error) {
+      const action = loginError("Wrong credrntials");
+      dispatch(action);
+    }
   };
 
   return (
@@ -67,7 +95,7 @@ export const AdminLogin = () => {
               label="email"
               placeholder="Email"
               type="email"
-              name="login"
+              name="email"
               onChange={handleChange}
             />
           </div>

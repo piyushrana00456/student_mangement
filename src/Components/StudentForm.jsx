@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 import {
   TextField,
   Typography,
@@ -7,6 +9,11 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
+import {
+  registerError,
+  registerLoading,
+  registerSuccess,
+} from "../Redux/action";
 import styles from "./StudentForm.module.css";
 
 const initState = {
@@ -21,7 +28,7 @@ const initState = {
 
 export const StudentForm = () => {
   const [formData, setFormData] = useState(initState);
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -33,7 +40,33 @@ export const StudentForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    handleCreate(formData);
     setFormData("");
+  };
+
+  const handleCreate = async (e) => {
+    dispatch(registerLoading());
+    console.log("studentData:", e);
+    try {
+      await axios
+        .post("http://localhost:4000/student", {
+          first_name: e.first_name,
+          last_name: e.last_name,
+          city: e.city,
+          age: e.age,
+          education: e.education,
+          gender: e.gender,
+          contact: e.contact,
+        })
+        .then((res) => {
+          const action = registerSuccess(res.data);
+          dispatch(action);
+          setFormData("");
+        });
+    } catch (error) {
+      const action = registerError("Wrong credential");
+      dispatch(action);
+    }
   };
 
   return (

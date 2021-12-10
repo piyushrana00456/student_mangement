@@ -1,9 +1,10 @@
 .form {
   display: grid;
   grid-template-areas:
-    "a . b . c"
-    "d . e . f"
-    "g . h. i";
+    "a . b "
+    "c . d "
+    "e . f"
+    "g .h";
   width: 50%;
   margin: 100px auto;
 }
@@ -48,5 +49,5 @@
 .info {
   position: absolute;
   top: 10;
-  left: 413px;
+  left: 1000px;
 }

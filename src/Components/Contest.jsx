@@ -8,17 +8,25 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import styles from "./Contest.module.css";
+import {
+  registerError,
+  registerLoading,
+  registerSuccess,
+} from "../Redux/action";
 
+import axios from "axios";
 const initState = {
   title: "",
   type: "",
   tags: "",
+  Deadline: "",
 };
 
 export const Contest = () => {
   const [contest, setContest] = useState(initState);
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setContest({
@@ -30,6 +38,27 @@ export const Contest = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(contest);
+    handleAdd(contest);
+  };
+
+  const handleAdd = async (e) => {
+    dispatch(registerLoading());
+    try {
+      await axios
+        .post("http://localhost:4000/contest", {
+          title: e.title,
+          type: e.type,
+          tags: e.tags,
+          Deadline: e.Deadline,
+        })
+        .then((res) => {
+          const action = registerSuccess(res.data);
+          dispatch(action);
+        });
+    } catch (error) {
+      const action = registerError("Wrong Input");
+      dispatch(action);
+    }
   };
 
   return (
