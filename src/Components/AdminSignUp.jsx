@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import {
   registerError,
   registerLoading,
@@ -58,6 +60,7 @@ const initState = {
 export const AdminSignUp = () => {
   const dispatch = useDispatch();
   const [signup, setSignup] = useState(initState);
+  const history = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,7 +81,7 @@ export const AdminSignUp = () => {
     // if (e.email.includes("@masai.school")) {
     //   return true;
     // } else {
-    //   alert(" you're not supposed to come here");
+    //
     // }
     try {
       dispatch(registerLoading());
@@ -93,10 +96,13 @@ export const AdminSignUp = () => {
           const action = registerSuccess(res.data);
           dispatch(action);
           localStorage.setItem("admin", JSON.stringify(res.data));
+          history("/admin-login");
         });
     } catch (error) {
       const action = registerError("Wrong Credentials");
       dispatch(action);
+      alert(" you're not supposed to come here");
+      history("/");
       console.log(error);
     }
   };
