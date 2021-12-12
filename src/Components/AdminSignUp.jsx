@@ -95,7 +95,6 @@ export const AdminSignUp = () => {
         .then((res) => {
           const action = registerSuccess(res.data);
           dispatch(action);
-          localStorage.setItem("admin", JSON.stringify(res.data));
           history("/admin-login");
         });
     } catch (error) {

@@ -66,7 +66,6 @@ export const AdminLogin = () => {
   };
 
   const handleLogin = async (e) => {
-    console.log(e);
     try {
       dispatch(loginLoading());
       await axios
@@ -76,6 +75,7 @@ export const AdminLogin = () => {
         })
         .then((res) => {
           const action = loginSuccess(res.data);
+          console.log("admin:", res.data);
           dispatch(action);
           localStorage.setItem("admin", JSON.stringify(res.data));
           history("/admin-dashboard");

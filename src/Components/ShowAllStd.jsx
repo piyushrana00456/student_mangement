@@ -3,23 +3,22 @@ import axios from "axios";
 import styled from "styled-components";
 export const ShowAllStd = () => {
   const [student, setStudent] = useState([]);
-  console.log(student);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [student]);
 
   const fetchData = async () => {
     await axios.get("http://localhost:4000/student").then((res) => {
-      console.log("data:", res.data);
       setStudent(res.data.data);
     });
   };
 
   const handleDelete = async (e) => {
-    console.log(e.id);
-    await axios.delete(`http://localhost:4000/student/${e._id}`).then((res) => {
-      console.log(res.data);
-    });
+    alert(`Are you sure it will deleted from DataBase also`);
+    await axios
+      .delete(`http://localhost:4000/student/${e._id}`)
+      .then((res) => {});
     fetchData();
   };
 
@@ -44,7 +43,9 @@ const Wrap = styled.div`
   border: 1px solid lightgray;
   margin: 30px auto;
   padding: 20px;
-  overflow-y: scroll;
+  height: 500px;
+  overflow-y: auto;
+
   & .container {
     margin-bottom: 15px;
     font-size: 18px;
